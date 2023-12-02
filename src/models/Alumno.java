@@ -186,4 +186,28 @@ public class Alumno {
     public Alumno() {
     }
 
+    public Alumno(String dniAlumno, String nombreAlumno, String apeMaterno, String apePaterno, String fechNacimiento, String domicilio, String dniPadre, String dniMadre, String dniApoderado, int telefono1, int telefono2, String email, String discapacidad, String grupoSangui, String alergias, String nivel, String grado, String seccion, String codigoModular, String sexo) {
+        this.dniAlumno = dniAlumno;
+        this.nombreAlumno = nombreAlumno;
+        this.apeMaterno = apeMaterno;
+        this.apePaterno = apePaterno;
+        this.fechNacimiento = fechNacimiento;
+        this.domicilio = domicilio;
+        this.dniPadre = dniPadre;
+        this.dniMadre = dniMadre;
+        this.dniApoderado = dniApoderado;
+        this.telefono1 = telefono1;
+        this.telefono2 = telefono2;
+        this.email = email;
+        this.discapacidad = discapacidad;
+        this.grupoSangui = grupoSangui;
+        this.alergias = alergias;
+        this.nivel = nivel;
+        this.grado = grado;
+        this.seccion = seccion;
+        this.codigoModular = codigoModular;
+        this.sexo = sexo;
+    }
+
+    
 }

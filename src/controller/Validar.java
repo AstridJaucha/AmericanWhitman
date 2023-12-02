@@ -7,6 +7,7 @@ import models.GestorBD;
 import views.Login;
 import views.RegistroAlumno;
 import models.Personal;
+import views.PanelMenu;
 
 
 public class Validar implements ActionListener {
@@ -14,15 +15,17 @@ public class Validar implements ActionListener {
     private Login login;
     private GestorBD gestor;
     private RegistroAlumno sistema;
+    private PanelMenu menu;
     private Personal x;
     
 
-    public Validar(Login login, RegistroAlumno sistema, GestorBD gestor, Personal x) {
+    public Validar(Login login, RegistroAlumno sistema, GestorBD gestor, Personal x, PanelMenu menu) {
 
         this.sistema = sistema;
         this.login = login;
         this.gestor = gestor;
         this.x=x;
+        this.menu=menu;
 
         this.login.btnIngresar.addActionListener(this);
     }
@@ -37,7 +40,7 @@ public class Validar implements ActionListener {
             // Cierra el JFrame de "Login"
             login.setVisible(false);
             // Establece la visibilidad del JFrame "RegistroAlumno"
-            sistema.setVisible(true);
+            menu.setVisible(true);
 
         } else {
             JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos");

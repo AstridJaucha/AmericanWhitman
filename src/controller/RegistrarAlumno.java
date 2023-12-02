@@ -24,31 +24,35 @@ public class RegistrarAlumno implements ActionListener {
     }
 
     public void Registrar() {
+        try {
 
-        if (gestor.InsertarAlumno(
-                al.getDniAlumno(),
-                al.getNombreAlumno(),
-                al.getApePaterno(),
-                al.getApeMaterno(),
-                al.getFechNacimiento(),
-                al.getDomicilio(),
-                al.getDniPadre(),
-                al.getDniMadre(),
-                al.getDniApoderado(),
-                al.getTelefono1(),
-                al.getTelefono2(),
-                al.getEmail(),
-                al.getDiscapacidad(),
-                al.getGrupoSangui(),
-                al.getAlergias(),
-                al.getNivel(),
-                al.getGrado(),
-                al.getSeccion(),
-                al.getCodigoModular(),
-                al.getSexo())) {
-            JOptionPane.showMessageDialog(null, "Registro exitoso");
-        } else {
-            JOptionPane.showMessageDialog(null, "Registro fallido");
+            if (gestor.InsertarAlumno(
+                    al.getDniAlumno(),
+                    al.getNombreAlumno(),
+                    al.getApePaterno(),
+                    al.getApeMaterno(),
+                    al.getFechNacimiento(),
+                    al.getDomicilio(),
+                    al.getDniPadre(),
+                    al.getDniMadre(),
+                    al.getDniApoderado(),
+                    al.getTelefono1(),
+                    al.getTelefono2(),
+                    al.getEmail(),
+                    al.getDiscapacidad(),
+                    al.getGrupoSangui(),
+                    al.getAlergias(),
+                    al.getNivel(),
+                    al.getGrado(),
+                    al.getSeccion(),
+                    al.getCodigoModular(),
+                    al.getSexo())) {
+                JOptionPane.showMessageDialog(null, "Registro exitoso");
+            } else {
+                JOptionPane.showMessageDialog(null, "Registro fallido");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
         }
 
     }
@@ -58,83 +62,11 @@ public class RegistrarAlumno implements ActionListener {
         if (e.getSource() == alumno.btnRegistrar) {
             boolean validacionesExitosas = true;  // Variable para rastrear el estado de las validaciones
 
-            if (!val.ValidarNombre()) {
-                validacionesExitosas = false;
-            }
-
-            if (!val.ValidarPaterno()) {
-                validacionesExitosas = false;
-            }
-
-            if (!val.ValidarMatern()) {
-                validacionesExitosas = false;
-            }
-
-            if (!val.ValidarDNI()) {
-                validacionesExitosas = false;
-            }
-
-            if (!val.ValidarFecha()) {
-                validacionesExitosas = false;
-            }
-
-            if (!val.ValidarDomi()) {
-                validacionesExitosas = false;
-            }
-
-            if (!val.ValidarDNIpadre()) {
-                validacionesExitosas = false;
-            }
-
-            if (!val.ValidarDNImadre()) {
-                validacionesExitosas = false;
-            }
-
-            if (!val.ValidarDNIapoderado()) {
-                validacionesExitosas = false;
-            }
-
-            if (!val.ValidarTelf1()) {
-                validacionesExitosas = false;
-            }
-
-            if (!val.ValidarTelf2()) {
-                validacionesExitosas = false;
-            }
-
-            if (!val.ValidarEmail()) {
-                validacionesExitosas = false;
-            }
-
-            if (!val.ValidarSexo()) {
-                validacionesExitosas = false;
-            }
-
-            if (!val.ValidarDiscapacidad()) {
-                validacionesExitosas = false;
-            }
-
-            if (!val.ValidarSangui()) {
-                validacionesExitosas = false;
-            }
-
-            if (!val.ValidarAlergia()) {
-                validacionesExitosas = false;
-            }
-
-            if (!val.ValidarNivel()) {
-                validacionesExitosas = false;
-            }
-
-            if (!val.ValidarGrado()) {
-                validacionesExitosas = false;
-            }
-
-            if (!val.ValidarSeccion()) {
-                validacionesExitosas = false;
-            }
-
-            if (!val.ValidarCodigoModular()) {
+            if (!val.ValidarNombre() || !val.ValidarPaterno() || !val.ValidarMatern() || !val.ValidarDNI()
+                    || !val.ValidarFecha() || !val.ValidarDomi() || !val.ValidarDNIpadre() || !val.ValidarDNImadre()
+                    || !val.ValidarDNIapoderado() || !val.ValidarTelf1() || !val.ValidarTelf2() || !val.ValidarEmail()
+                    || !val.ValidarSexo() || !val.ValidarDiscapacidad() || !val.ValidarSangui() || !val.ValidarAlergia()
+                    || !val.ValidarNivel() || !val.ValidarGrado() || !val.ValidarSeccion() || !val.ValidarCodigoModular()) {
                 validacionesExitosas = false;
             }
 

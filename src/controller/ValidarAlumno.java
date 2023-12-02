@@ -70,32 +70,31 @@ public class ValidarAlumno {
 
     }
 
-    public boolean ValidarFecha() {
-        if (alumno.txtFnacimienAlumno.getText()
-                .isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Ingrese la fecha de nacimiento del alumno", "No tiene un valor registrado", JOptionPane.ERROR_MESSAGE);
-            return false;
-        } else {
-            String fechaNacimiento = alumno.txtFnacimienAlumno.getText();
-            if (fechaNacimiento.matches("\\d{2}-\\d{2}-\\d{2}")) {
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yy-MM-dd");
-                dateFormat.setLenient(false);  // No permite fechas inválidas
+   public boolean ValidarFecha() {
+    if (alumno.txtFnacimienAlumno.getText().isEmpty()) {
+        JOptionPane.showMessageDialog(null, "Ingrese la fecha de nacimiento del alumno", "No tiene un valor registrado", JOptionPane.ERROR_MESSAGE);
+        return false;
+    } else {
+        String fechaNacimiento = alumno.txtFnacimienAlumno.getText();
+        if (fechaNacimiento.matches("\\d{4}-\\d{2}-\\d{2}")) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            dateFormat.setLenient(false);  // No permite fechas inválidas
 
-                try {
-                    Date parsedDate = dateFormat.parse(fechaNacimiento);
-                    al.setFechNacimiento(fechaNacimiento);
-                    return true;
-                } catch (ParseException e) {
-                    JOptionPane.showMessageDialog(null, "Ingrese una fecha de nacimiento válida en el formato dd-MM-yy (ejemplo: 04-06-30)", "Fecha de nacimiento inválida", JOptionPane.ERROR_MESSAGE);
-                    return false;
-                }
-            } else {
-                JOptionPane.showMessageDialog(null, "Ingrese una fecha de nacimiento válida en el formato dd-MM-yy (ejemplo: 04-06-30)", "Formato de fecha incorrecto", JOptionPane.ERROR_MESSAGE);
+            try {
+                Date parsedDate = dateFormat.parse(fechaNacimiento);
+                al.setFechNacimiento(fechaNacimiento);
+                return true;
+            } catch (ParseException e) {
+                JOptionPane.showMessageDialog(null, "Ingrese una fecha de nacimiento válida en\n el formato AAAA-MM-DD (ejemplo: 2004-06-30)", "Fecha de nacimiento inválida", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
+        } else {
+            JOptionPane.showMessageDialog(null, "Ingrese una fecha de nacimiento válida en\n el formato AA-MM-DD (ejemplo: 04-06-30)", "Formato de fecha incorrecto", JOptionPane.ERROR_MESSAGE);
+            return false;
         }
-
     }
+}
+
 
     public boolean ValidarDomi() {
 
@@ -163,8 +162,7 @@ public class ValidarAlumno {
 
     public boolean ValidarTelf1() {
 
-        if (alumno.txtTelefono1.getText()
-                .isEmpty()) {
+        if (alumno.txtTelefono1.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Ingrese el número de teléfono 1", "No tiene un valor registrado", JOptionPane.ERROR_MESSAGE);
             return false;
         } else {
@@ -188,20 +186,22 @@ public class ValidarAlumno {
         } else {
             String telefono2 = alumno.txtTelefono2.getText();
 
-            if (telefono2.equals("0")) {
-                JOptionPane.showMessageDialog(null, "Esta indicando que no tiene otro numero de telefono", "No hay telefono 2 registrado", JOptionPane.INFORMATION_MESSAGE);
-                al.setTelefono2(Integer.parseInt(telefono2));
-                return true;
-            } else if (!telefono2.matches("\\d{9}")) {
+            if (!telefono2.matches("\\d{9}")) {
                 JOptionPane.showMessageDialog(null, "Ingrese un número de teléfono válido de 9 dígitos numéricos.\nSi no tiene colocar el numero 0", "Valor erróneo en teléfono 2 del alumno", JOptionPane.ERROR_MESSAGE);
                 return false;
-            } else {
+            } else if (telefono2.equals("0")) {
+                al.setTelefono2(Integer.parseInt(telefono2));
+                return true;
+            } else{
                 al.setTelefono2(Integer.parseInt(telefono2));
                 return true;
             }
         }
     }
 
+    
+    
+    
     public boolean ValidarEmail() {
 
         String emailRegex = "^[A-Za-z0-9+_.-]+@gmail\\.com$";
