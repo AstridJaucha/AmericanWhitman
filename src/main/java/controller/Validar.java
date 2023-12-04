@@ -36,7 +36,7 @@ public class Validar implements ActionListener {
         x.setClavePers(login.txtClave.getText());
         
         if (gestor.Validar(x.getIdPersonal(), x.getClavePers())) {
-            JOptionPane.showMessageDialog(null, "Ingreso exitoso");
+            System.out.println("Ingreso correcto de usuario " + x.getIdPersonal());
             // Cierra el JFrame de "Login"
             login.setVisible(false);
             // Establece la visibilidad del JFrame "RegistroAlumno"

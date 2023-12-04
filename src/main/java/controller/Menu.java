@@ -21,7 +21,7 @@ public class Menu implements ActionListener {
 
         this.menu.btnCerrar.addActionListener(this);
         this.menu.btnListaAlumnos.addActionListener(this);
-        this.menu.btnListaPadres.addActionListener(this);
+        
         this.menu.btnRegistrarAlumno.addActionListener(this);
         this.sistema.btnMenu.addActionListener(this);
         this.lista.btnMenu.addActionListener(this);
@@ -43,7 +43,7 @@ public class Menu implements ActionListener {
 
     public void volver1() {
 
-        int opcion = JOptionPane.showConfirmDialog(null, "¿Seguro que desea volver al menú?\nNo se guardaran los datos que se pueda encontrar actualizando\na menos que ya lo haya guardado", "Confirmar salida", JOptionPane.YES_NO_OPTION);
+        int opcion = JOptionPane.showConfirmDialog(null, "¿Seguro que desea volver al menú?", "Confirmar salida", JOptionPane.YES_NO_OPTION);
 
         if (opcion == JOptionPane.YES_OPTION) {
             sistema.setVisible(false);

@@ -209,5 +209,27 @@ public class Alumno {
         this.sexo = sexo;
     }
 
-    
+    public void vaciarDatos() {
+        // Reiniciar todos los valores a un estado inicial o predeterminado
+        this.dniAlumno = "";
+        this.nombreAlumno = "";
+        this.apeMaterno = "";
+        this.apePaterno = "";
+        this.fechNacimiento = "";
+        this.domicilio = "";
+        this.dniPadre = "";
+        this.dniMadre = "";
+        this.dniApoderado = "";
+        this.telefono1 = 0; // O el valor predeterminado que desees
+        this.telefono2 = 0; // O el valor predeterminado que desees
+        this.email = "";
+        this.discapacidad = "";
+        this.grupoSangui = "";
+        this.alergias = "";
+        this.nivel = "";
+        this.grado = "";
+        this.seccion = "";
+        this.codigoModular = "";
+        this.sexo = "";
+    }
 }

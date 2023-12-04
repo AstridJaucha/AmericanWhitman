@@ -1,13 +1,12 @@
-
 package views;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.Timer;
 import models.GestorBD;
-
 
 /**
  *
@@ -22,6 +21,14 @@ public class Login extends javax.swing.JFrame {
         initComponents();
         showtxtHora();
         showtxtFecha();
+        URL imageUrl = getClass().getResource("/imag/logo.png");
+        System.out.println("Image URL: " + imageUrl);
+
+        if (imageUrl != null) {
+            jLabel1.setIcon(new javax.swing.ImageIcon(imageUrl));
+        } else {
+            System.err.println("Image not found!");
+        }
     }
 
     void showtxtHora() {
@@ -43,9 +50,9 @@ public class Login extends javax.swing.JFrame {
             }
         }
         ).start();
-        
+
     }
-            
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -70,6 +77,7 @@ public class Login extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Login");
 
         jPanel1.setBackground(new java.awt.Color(204, 204, 204));
 
@@ -145,8 +153,6 @@ public class Login extends javax.swing.JFrame {
                 .addGap(24, 24, 24))
         );
 
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/logo.png"))); // NOI18N
-
         jLabel8.setFont(new java.awt.Font("Sitka Subheading", 1, 18)); // NOI18N
         jLabel8.setText("Sistema de matrícula y ratificación");
 
@@ -213,14 +219,13 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIngresarActionPerformed
-       
-        
+
+
     }//GEN-LAST:event_btnIngresarActionPerformed
 
     private void txtClaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtClaveActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtClaveActionPerformed
-
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

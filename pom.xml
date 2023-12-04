@@ -14,13 +14,12 @@
             <version>8.0.32</version>
         </dependency>
 
-        
     </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>19</maven.compiler.source>
         <maven.compiler.target>19</maven.compiler.target>
-        <exec.mainClass>american.whitman.americanwhitman.main.Main</exec.mainClass>
+        <exec.mainClass>Principal.Principal</exec.mainClass>
     </properties>
     
     

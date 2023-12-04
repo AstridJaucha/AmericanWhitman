@@ -1,29 +1,32 @@
-
 package controller;
+
 import javax.swing.JComboBox;
-import javax.swing.JOptionPane;
 import models.GestorBD;
 import views.RegistroAlumno;
+import views.ListaAlumnos;
 
 public class ComboBox {
+
     private RegistroAlumno vista; // La ventana de la interfaz de usuario
-    
-    public ComboBox(RegistroAlumno vista) {
+    private ListaAlumnos lis;
+
+    public ComboBox(RegistroAlumno vista, ListaAlumnos lis) {
         this.vista = vista;
+        this.lis = lis;
     }
 
-    public  void DatosComboBoxNivel(JComboBox<String> comboBoxNivel) {
+    public void DatosComboBoxNivel(JComboBox<String> comboBoxNivel) {
         // Lógica para cargar datos desde la capa de acceso a datos (GestorBD)
         GestorBD.DatosComboBoxNivel(comboBoxNivel);
     }
+
     public void DatosComboBoxGrado(JComboBox<String> comboBoxNivel, JComboBox<String> comboBoxGrado) {
         // Lógica para cargar datos desde la capa de acceso a datos (GestorBD)
-        
-        
+
         String nivelSeleccionado = (String) comboBoxNivel.getSelectedItem();
-        
+
         comboBoxGrado.removeAllItems(); // Limpia los elementos actuales
-        
+
         if ("Inicial".equals(nivelSeleccionado)) {
             comboBoxGrado.addItem("Seleccionar");
             comboBoxGrado.addItem("3 años");
@@ -45,10 +48,24 @@ public class ComboBox {
             comboBoxGrado.addItem("Cuarto");
             comboBoxGrado.addItem("Quinto");
         }
-        
+
     }
-    public void DatosComboBoxSeccion(JComboBox<String> comboBoxSeccion) {
+
+    public void DatosComboBoxSeccion(JComboBox<String> comboBoxNivel, JComboBox<String> comboBoxGrado,JComboBox<String> comboBoxSeccion) {
         // Lógica para cargar datos desde la capa de acceso a datos (GestorBD)
-        GestorBD.DatosComboBoxSeccion(comboBoxSeccion);
+
+        String gradoSeleccionado = (String) comboBoxGrado.getSelectedItem();
+
+        comboBoxSeccion.removeAllItems(); // Limpia los elementos actuales
+
+        if ("seleccionar".equals(gradoSeleccionado)) {
+            comboBoxSeccion.addItem("Seleccionar");
+
+        } else {
+            comboBoxSeccion.addItem("Seleccionar");
+            comboBoxSeccion.addItem("A");
+            comboBoxSeccion.addItem("B");
+            comboBoxSeccion.addItem("C");
+        }
     }
 }

@@ -20,14 +20,17 @@ public class Principal {
         PanelMenu panel = new PanelMenu();
 
         GestorBD modelo = new GestorBD(sistema, al, lista);
+
         ValidarAlumno val = new ValidarAlumno(sistema, al);
 
         Menu menu = new Menu(sistema, panel, lista);
-
+        ComboBox a = new ComboBox(sistema, lista);
         Validar validar = new Validar(vista, sistema, modelo, x, panel);
         RegistrarAlumno registrar = new RegistrarAlumno(sistema, modelo, al, val);
         BuscarAlumno buscar = new BuscarAlumno(sistema, modelo, al);
-        ListaUnAlumno unAlu = new ListaUnAlumno(lista, modelo, al);
+        
+        ListaControl bus = new ListaControl(lista, modelo, al);
+
         Actualizar actualizar = new Actualizar(sistema, modelo, al, val);
         vista.setVisible(true);
     }

@@ -5,6 +5,7 @@ import java.io.StringWriter;
 import java.sql.*;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import models.Alumno;
 import views.RegistroAlumno;
 import views.ListaAlumnos;
@@ -22,45 +23,208 @@ public class GestorBD {
     public GestorBD(RegistroAlumno alumno, Alumno al, ListaAlumnos lista) {
         this.alumno = alumno;
         this.al = al;
-        this.lista=lista;
+        this.lista = lista;
         conn = ConectaBD.abrir();
     }
 
-    public boolean Buscar1alumno(String dniAlumno, String nombreAlumno, String apePaterno, String apeMaterno,
-            String fechNacimiento, String domicilio, String dniPadre, String dniMadre, String dniApoderado, int telefono1,
-            int telefono2, String email, String discapacidad, String grupoSangui, String alergias, String nivel,
-            String grado, String seccion, String codigoModular, String sexo) {
+    public void tablaTodos(DefaultTableModel modelo) {
+        al.vaciarDatos();
         try {
             Connection cn = ConectaBD.abrir();
             PreparedStatement ps = null;
-            dniAlumno = lista.txtBuscarDNI.getText();
-            String query = "SELECT * FROM alumno WHERE dniAlumno = ?";
-            ps = cn.prepareStatement(query);
 
-            ps.setString(1, dniAlumno);
+            String query = "SELECT * FROM alumno";
+            ps = cn.prepareStatement(query);
+            modelo.setRowCount(0);
+            try ( ResultSet rs = ps.executeQuery()) {
+                modelo.setColumnIdentifiers(new Object[]{"DNI", "Nombres", "Apellido Paterno", "Apellido Materno",
+                    "F. Nacimiento", "Sexo", "Nivel", "Grado", "Sección", "Codigo modular", "Domicilio", "DNI Padre",
+                    "DNI Madre", "DNI Apoderado", "Teléfono 1", "Teléfono 2", "E-mail", "Discapacidad", "Tipo sangre",
+                    "Alergias"});
+
+                while (rs.next()) {
+
+                    al.setNombreAlumno(rs.getString("nombreAlumno"));
+                    al.setApePaterno(rs.getString("apePaterno"));
+                    al.setApeMaterno(rs.getString("apeMaterno"));
+                    al.setFechNacimiento(rs.getString("fechNacimiento"));
+                    al.setDomicilio(rs.getString("domicilio"));
+                    al.setDniPadre(rs.getString("dniPadre"));
+                    al.setDniMadre(rs.getString("dniMadre"));
+                    al.setDniAlumno(rs.getString("dniAlumno"));
+                    al.setDniApoderado(rs.getString("dniApoderado"));
+                    al.setTelefono1(rs.getInt("telefono1"));
+                    al.setTelefono2(rs.getInt("telefono2"));
+                    al.setEmail(rs.getString("email"));
+                    al.setDiscapacidad(rs.getString("discapacidad"));
+                    al.setGrupoSangui(rs.getString("grupoSangui"));
+                    al.setAlergias(rs.getString("alergias"));
+                    al.setNivel(rs.getString("nivel"));
+                    al.setGrado(rs.getString("grado"));
+                    al.setSeccion(rs.getString("seccion"));
+                    al.setCodigoModular(rs.getString("codigoModular"));
+                    al.setSexo(rs.getString("sexo"));
+
+                    Object[] fila = {al.getDniAlumno(),
+                        al.getNombreAlumno(),
+                        al.getApePaterno(),
+                        al.getApeMaterno(),
+                        al.getFechNacimiento(),
+                        al.getSexo(),
+                        al.getNivel(),
+                        al.getGrado(),
+                        al.getSeccion(),
+                        al.getCodigoModular(),
+                        al.getDomicilio(),
+                        al.getDniPadre(),
+                        al.getDniMadre(),
+                        al.getDniApoderado(),
+                        al.getTelefono1(),
+                        al.getTelefono2(),
+                        al.getEmail(),
+                        al.getDiscapacidad(),
+                        al.getGrupoSangui(),
+                        al.getAlergias()
+
+                    };
+                    modelo.addRow(fila);
+                    System.out.println("Se encontro info: Nombre " + al.getNombreAlumno());
+
+                }
+
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error en la BD.");
+            e.printStackTrace();
+
+        } finally {
+            ConectaBD.cerrar();
+        }
+
+    }
+
+    public void especial(DefaultTableModel modelo) {
+        al.vaciarDatos();
+        al.setDniAlumno("");
+        
+        try {
+            Connection cn = ConectaBD.abrir();
+            PreparedStatement ps = null;
+
+            String nivel, grado, seccion;
+
+            nivel = lista.cbxNivel.getSelectedItem().toString();
+            grado = lista.cbxGrado.getSelectedItem().toString();
+            seccion = lista.cbxSeccion.getSelectedItem().toString();
+
+            String query;
+            modelo.setRowCount(0);
+            if (!nivel.equals("Seleccionar") && !grado.equals("Seleccionar") && !seccion.equals("Seleccionar")) {
+                query = "SELECT * FROM alumno WHERE nivel='" + nivel + "' and grado ='" + grado + "' and seccion='" + seccion + "'";
+                ps = cn.prepareStatement(query);
+
+            } else if (!nivel.equals("Seleccionar") && !grado.equals("Seleccionar") && seccion.equals("Seleccionar")) {
+                query = "SELECT * FROM alumno WHERE nivel='" + nivel + "' and grado ='" + grado + "'";
+                ps = cn.prepareStatement(query);
+            } else if (!nivel.equals("Seleccionar") && grado.equals("Seleccionar") && seccion.equals("Seleccionar")) {
+                query = "SELECT * FROM alumno WHERE nivel='" + nivel + "'";
+                ps = cn.prepareStatement(query);
+            } else {
+
+                JOptionPane.showMessageDialog(null, "Indica al menos una característica");
+
+            }
 
             try ( ResultSet rs = ps.executeQuery()) {
+                modelo.setColumnIdentifiers(new Object[]{"DNI", "Nombres", "Apellido Paterno", "Apellido Materno",
+                    "F. Nacimiento", "Sexo", "Nivel", "Grado", "Sección", "Codigo modular", "Domicilio", "DNI Padre",
+                    "DNI Madre", "DNI Apoderado", "Teléfono 1", "Teléfono 2", "E-mail", "Discapacidad", "Tipo sangre",
+                    "Alergias"});
+
+                while (rs.next()) {
+
+                    al.setNombreAlumno(rs.getString("nombreAlumno"));
+                    al.setApePaterno(rs.getString("apePaterno"));
+                    al.setApeMaterno(rs.getString("apeMaterno"));
+                    al.setFechNacimiento(rs.getString("fechNacimiento"));
+                    al.setDomicilio(rs.getString("domicilio"));
+                    al.setDniPadre(rs.getString("dniPadre"));
+                    al.setDniMadre(rs.getString("dniMadre"));
+                    al.setDniAlumno(rs.getString("dniAlumno"));
+                    al.setDniApoderado(rs.getString("dniApoderado"));
+                    al.setTelefono1(rs.getInt("telefono1"));
+                    al.setTelefono2(rs.getInt("telefono2"));
+                    al.setEmail(rs.getString("email"));
+                    al.setDiscapacidad(rs.getString("discapacidad"));
+                    al.setGrupoSangui(rs.getString("grupoSangui"));
+                    al.setAlergias(rs.getString("alergias"));
+                    al.setNivel(rs.getString("nivel"));
+                    al.setGrado(rs.getString("grado"));
+                    al.setSeccion(rs.getString("seccion"));
+                    al.setCodigoModular(rs.getString("codigoModular"));
+                    al.setSexo(rs.getString("sexo"));
+
+                    Object[] fila = {al.getDniAlumno(),
+                        al.getNombreAlumno(),
+                        al.getApePaterno(),
+                        al.getApeMaterno(),
+                        al.getFechNacimiento(),
+                        al.getSexo(),
+                        al.getNivel(),
+                        al.getGrado(),
+                        al.getSeccion(),
+                        al.getCodigoModular(),
+                        al.getDomicilio(),
+                        al.getDniPadre(),
+                        al.getDniMadre(),
+                        al.getDniApoderado(),
+                        al.getTelefono1(),
+                        al.getTelefono2(),
+                        al.getEmail(),
+                        al.getDiscapacidad(),
+                        al.getGrupoSangui(),
+                        al.getAlergias()
+
+                    };
+                    modelo.addRow(fila);
+                    System.out.println("Se encontro info: Nombre " + al.getNombreAlumno());
+
+                }
+                ConectaBD.cerrar();
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, "Error en la BD.");
+                e.printStackTrace();
+                ConectaBD.cerrar();
+            }
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error en la BD.");
+            e.printStackTrace();
+            ConectaBD.cerrar();
+        } finally {
+            ConectaBD.cerrar();
+        }
+
+    }
+
+    public void tablaestu(DefaultTableModel modelo) {
+        al.vaciarDatos();
+        try {
+            Connection cn = ConectaBD.abrir();
+            PreparedStatement ps = null;
+            al.setDniAlumno(lista.txtBuscarDNI.getText());
+            String dniAlumno = al.getDniAlumno();
+            String query = "SELECT * FROM alumno WHERE dniAlumno = ?";
+            ps = cn.prepareStatement(query);
+            ps.setString(1, dniAlumno);
+modelo.setRowCount(0);
+            try ( ResultSet rs = ps.executeQuery()) {
+                modelo.setColumnIdentifiers(new Object[]{"DNI", "Nombres", "Apellido Paterno", "Apellido Materno",
+                    "F. Nacimiento", "Sexo", "Nivel", "Grado", "Sección", "Codigo modular", "Domicilio", "DNI Padre",
+                    "DNI Madre", "DNI Apoderado", "Teléfono 1", "Teléfono 2", "E-mail", "Discapacidad", "Tipo sangre",
+                    "Alergias"});
+
                 if (rs.next()) {
-                    // Recuperar datos de la consulta
-                    nombreAlumno = rs.getString("nombreAlumno");
-                    apePaterno = rs.getString("apePaterno");
-                    apeMaterno = rs.getString("apeMaterno");
-                    fechNacimiento = rs.getString("fechNacimiento");
-                    domicilio = rs.getString("domicilio");
-                    dniPadre = rs.getString("dniPadre");
-                    dniMadre = rs.getString("dniMadre");
-                    dniApoderado = rs.getString("dniApoderado");
-                    telefono1 = rs.getInt("telefono1");
-                    telefono2 = rs.getInt("telefono2");
-                    email = rs.getString("email");
-                    discapacidad = rs.getString("discapacidad");
-                    grupoSangui = rs.getString("grupoSangui");
-                    alergias = rs.getString("alergias");
-                    nivel = rs.getString("nivel");
-                    grado = rs.getString("grado");
-                    seccion = rs.getString("seccion");
-                    codigoModular = rs.getString("codigoModular");
-                    sexo = rs.getString("sexo");
 
                     al.setNombreAlumno(rs.getString("nombreAlumno"));
                     al.setApePaterno(rs.getString("apePaterno"));
@@ -82,19 +246,48 @@ public class GestorBD {
                     al.setSeccion(rs.getString("seccion"));
                     al.setCodigoModular(rs.getString("codigoModular"));
                     al.setSexo(rs.getString("sexo"));
+                    
+
+                    Object[] fila = {al.getDniAlumno(),
+                        al.getNombreAlumno(),
+                        al.getApePaterno(),
+                        al.getApeMaterno(),
+                        al.getFechNacimiento(),
+                        al.getSexo(),
+                        al.getNivel(),
+                        al.getGrado(),
+                        al.getSeccion(),
+                        al.getCodigoModular(),
+                        al.getDomicilio(),
+                        al.getDniPadre(),
+                        al.getDniMadre(),
+                        al.getDniApoderado(),
+                        al.getTelefono1(),
+                        al.getTelefono2(),
+                        al.getEmail(),
+                        al.getDiscapacidad(),
+                        al.getGrupoSangui(),
+                        al.getAlergias()
+
+                    };
+                    modelo.addRow(fila);
+                    System.out.println("Se encontro info: Nombre " + al.getNombreAlumno());
                     ConectaBD.cerrar();
-                    return true;
                 } else {
                     ConectaBD.cerrar();
-                    JOptionPane.showMessageDialog(null, "No se encontraron datos para el DNI proporcionado.");
-                    return false;
+                    
+                    JOptionPane.showMessageDialog(null, "Alumno no encontrado.");
+
                 }
             }
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error en la BD.");
             e.printStackTrace();
-            return false;
+
+        } finally {
+            ConectaBD.cerrar();
         }
+
     }
 
     public boolean InsertarAlumno(String dniAlumno, String nombreAlumno,
@@ -152,6 +345,8 @@ public class GestorBD {
             JOptionPane.showMessageDialog(null, stackTrace, "Error", JOptionPane.ERROR_MESSAGE);
 
             return false;
+        } finally {
+            ConectaBD.cerrar();
         }
     }
 
@@ -205,7 +400,10 @@ public class GestorBD {
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error en la BD.");
             e.printStackTrace();
+
             return false;
+        } finally {
+            ConectaBD.cerrar();
         }
     }
 
@@ -277,6 +475,8 @@ public class GestorBD {
             JOptionPane.showMessageDialog(null, "Error en la BD.");
             e.printStackTrace();
             return false;
+        } finally {
+            ConectaBD.cerrar();
         }
     }
 
@@ -301,6 +501,8 @@ public class GestorBD {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error en la BD.");
             e.printStackTrace();
+        } finally {
+            ConectaBD.cerrar();
         }
     }
 
@@ -325,6 +527,9 @@ public class GestorBD {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error en la BD.");
             e.printStackTrace();
+
+        } finally {
+            ConectaBD.cerrar();
         }
     }
 
@@ -345,10 +550,12 @@ public class GestorBD {
                 comboBox.addItem(nivel);
             }
 
-            ConectaBD.cerrar();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error en la BD.");
             e.printStackTrace();
+
+        } finally {
+            ConectaBD.cerrar();
         }
     }
 
@@ -372,7 +579,10 @@ public class GestorBD {
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error en la BD.");
             e.printStackTrace();
+
             return false;
+        } finally {
+            ConectaBD.cerrar();
         }
     }
 }
