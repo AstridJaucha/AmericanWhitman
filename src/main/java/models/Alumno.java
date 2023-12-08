@@ -2,6 +2,7 @@ package models;
 
 public class Alumno {
 
+    private String codAlumno;
     private String dniAlumno;
     private String nombreAlumno;
     private String apeMaterno;
@@ -18,10 +19,19 @@ public class Alumno {
     private String grupoSangui;
     private String alergias;
     private String nivel;
+    private String añoEduc;
     private String grado;
     private String seccion;
     private String codigoModular;
     private String sexo;
+
+    public String getCodAlumno() {
+        return codAlumno;
+    }
+
+    public void setCodAlumno(String codAlumno) {
+        this.codAlumno = codAlumno;
+    }
 
     public String getDniAlumno() {
         return dniAlumno;
@@ -151,6 +161,14 @@ public class Alumno {
         this.nivel = nivel;
     }
 
+    public String getAñoEduc() {
+        return añoEduc;
+    }
+
+    public void setAñoEduc(String añoEduc) {
+        this.añoEduc = añoEduc;
+    }
+
     public String getGrado() {
         return grado;
     }
@@ -186,7 +204,8 @@ public class Alumno {
     public Alumno() {
     }
 
-    public Alumno(String dniAlumno, String nombreAlumno, String apeMaterno, String apePaterno, String fechNacimiento, String domicilio, String dniPadre, String dniMadre, String dniApoderado, int telefono1, int telefono2, String email, String discapacidad, String grupoSangui, String alergias, String nivel, String grado, String seccion, String codigoModular, String sexo) {
+    public Alumno(String codAlumno, String dniAlumno, String nombreAlumno, String apeMaterno, String apePaterno, String fechNacimiento, String domicilio, String dniPadre, String dniMadre, String dniApoderado, int telefono1, int telefono2, String email, String discapacidad, String grupoSangui, String alergias, String nivel, String añoEduc, String grado, String seccion, String codigoModular, String sexo) {
+        this.codAlumno = codAlumno;
         this.dniAlumno = dniAlumno;
         this.nombreAlumno = nombreAlumno;
         this.apeMaterno = apeMaterno;
@@ -203,14 +222,18 @@ public class Alumno {
         this.grupoSangui = grupoSangui;
         this.alergias = alergias;
         this.nivel = nivel;
+        this.añoEduc = añoEduc;
         this.grado = grado;
         this.seccion = seccion;
         this.codigoModular = codigoModular;
         this.sexo = sexo;
     }
 
+    
+    
     public void vaciarDatos() {
         // Reiniciar todos los valores a un estado inicial o predeterminado
+        this.codAlumno = "";
         this.dniAlumno = "";
         this.nombreAlumno = "";
         this.apeMaterno = "";

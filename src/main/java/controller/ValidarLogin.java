@@ -10,7 +10,7 @@ import models.Personal;
 import views.PanelMenu;
 
 
-public class Validar implements ActionListener {
+public class ValidarLogin implements ActionListener {
 
     private Login login;
     private GestorBD gestor;
@@ -19,7 +19,7 @@ public class Validar implements ActionListener {
     private Personal x;
     
 
-    public Validar(Login login, RegistroAlumno sistema, GestorBD gestor, Personal x, PanelMenu menu) {
+    public ValidarLogin(Login login, RegistroAlumno sistema, GestorBD gestor, Personal x, PanelMenu menu) {
 
         this.sistema = sistema;
         this.login = login;
@@ -31,7 +31,7 @@ public class Validar implements ActionListener {
     }
 
    
-    public void Ingreso() {
+    public boolean Ingreso() {
         x.setIdPersonal(login.txtUsuario.getText());
         x.setClavePers(login.txtClave.getText());
         
@@ -41,16 +41,26 @@ public class Validar implements ActionListener {
             login.setVisible(false);
             // Establece la visibilidad del JFrame "RegistroAlumno"
             menu.setVisible(true);
-
+            return true;
         } else {
             JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos");
+            
         }
+        return false;
+    }
+    public void inser(){
+        String id=x.getIdPersonal();
+        
+        gestor.registraPersonal(id);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == login.btnIngresar) {
-            Ingreso();
+            if (Ingreso()) {
+                inser();
+            }
+            
         }
        
     }

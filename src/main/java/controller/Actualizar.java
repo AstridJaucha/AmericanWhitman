@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
 import models.Alumno;
 import models.GestorBD;
+import views.RatificarMatricula;
 import views.RegistroAlumno;
 
 public class Actualizar implements ActionListener {
@@ -13,14 +14,16 @@ public class Actualizar implements ActionListener {
     private GestorBD gestor;
     private RegistroAlumno alumno;
     private Alumno al;
-    private ValidarAlumno val;
+    private ValidarRatifica val;
+    private RatificarMatricula rat;
 
-    public Actualizar(RegistroAlumno alumno, GestorBD gestor, Alumno al, ValidarAlumno val) {
-        this.alumno = alumno;
+    public Actualizar(GestorBD gestor, Alumno al, ValidarRatifica val, RatificarMatricula rat) {
+        
         this.gestor = gestor;
         this.al = al;
         this.val = val;
-        this.alumno.btnActualizarAlumno.addActionListener(this);
+        this.rat=rat;
+        this.rat.btnRatificarAlumno.addActionListener(this);
 
     }
 
@@ -29,13 +32,7 @@ public class Actualizar implements ActionListener {
 
             if (gestor.ActualizarAlumno(
                     al.getDniAlumno(),
-                    al.getNombreAlumno(),
-                    al.getApePaterno(),
-                    al.getApeMaterno(),
-                    al.getFechNacimiento(),
                     al.getDomicilio(),
-                    al.getDniPadre(),
-                    al.getDniMadre(),
                     al.getDniApoderado(),
                     al.getTelefono1(),
                     al.getTelefono2(),
@@ -45,9 +42,7 @@ public class Actualizar implements ActionListener {
                     al.getAlergias(),
                     al.getNivel(),
                     al.getGrado(),
-                    al.getSeccion(),
-                    al.getCodigoModular(),
-                    al.getSexo())) {
+                    al.getSeccion())) {
                 JOptionPane.showMessageDialog(null, "Actualización exitoso");
             } else {
                 JOptionPane.showMessageDialog(null, "Actualización fallida");
@@ -60,7 +55,7 @@ public class Actualizar implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == alumno.btnActualizarAlumno) {
+        if (e.getSource() == rat.btnRatificarAlumno) {
             boolean validacionesExitosas = true;  // Variable para rastrear el estado de las validaciones
 
             if (!val.ValidarNombre() || !val.ValidarPaterno() || !val.ValidarMatern() || !val.ValidarDNI()

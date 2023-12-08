@@ -1,14 +1,14 @@
 package models;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.sql.*;
+
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import models.Alumno;
 import views.RegistroAlumno;
 import views.ListaAlumnos;
+import views.RatificarMatricula;
 
 public class GestorBD {
 
@@ -19,12 +19,38 @@ public class GestorBD {
     private RegistroAlumno alumno;
     private Alumno al;
     private ListaAlumnos lista;
+    private Jovenes nin;
+    private RatificarMatricula rat;
 
-    public GestorBD(RegistroAlumno alumno, Alumno al, ListaAlumnos lista) {
+    public GestorBD(RegistroAlumno alumno, Alumno al, ListaAlumnos lista, Jovenes nin, RatificarMatricula rat) {
         this.alumno = alumno;
         this.al = al;
         this.lista = lista;
+        this.nin = nin;
+        this.rat = rat;
+
         conn = ConectaBD.abrir();
+    }
+
+    public int registraPersonal(String id) {
+        try ( Connection cn = ConectaBD.abrir();  PreparedStatement ps = cn.prepareStatement("INSERT INTO registropersonal (idPersonal, fechaHora) VALUES (?, NOW());")) {
+
+            ps.setString(1, id);
+            int resultUpdate = ps.executeUpdate();
+
+            if (resultUpdate != 0) {
+                System.out.println("Personal registrado exitosamente");
+                return 1;  // 1 indica éxito
+            } else {
+                System.out.println("Error en el registro de personal");
+                return 0;  // 0 indica fallo
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error en la BD: " + e.getMessage());
+            e.printStackTrace();
+            return -1;  // -1 indica un error inesperado
+        }
     }
 
     public void tablaTodos(DefaultTableModel modelo) {
@@ -106,7 +132,7 @@ public class GestorBD {
     public void especial(DefaultTableModel modelo) {
         al.vaciarDatos();
         al.setDniAlumno("");
-        
+
         try {
             Connection cn = ConectaBD.abrir();
             PreparedStatement ps = null;
@@ -217,7 +243,7 @@ public class GestorBD {
             String query = "SELECT * FROM alumno WHERE dniAlumno = ?";
             ps = cn.prepareStatement(query);
             ps.setString(1, dniAlumno);
-modelo.setRowCount(0);
+            modelo.setRowCount(0);
             try ( ResultSet rs = ps.executeQuery()) {
                 modelo.setColumnIdentifiers(new Object[]{"DNI", "Nombres", "Apellido Paterno", "Apellido Materno",
                     "F. Nacimiento", "Sexo", "Nivel", "Grado", "Sección", "Codigo modular", "Domicilio", "DNI Padre",
@@ -246,7 +272,6 @@ modelo.setRowCount(0);
                     al.setSeccion(rs.getString("seccion"));
                     al.setCodigoModular(rs.getString("codigoModular"));
                     al.setSexo(rs.getString("sexo"));
-                    
 
                     Object[] fila = {al.getDniAlumno(),
                         al.getNombreAlumno(),
@@ -275,7 +300,7 @@ modelo.setRowCount(0);
                     ConectaBD.cerrar();
                 } else {
                     ConectaBD.cerrar();
-                    
+
                     JOptionPane.showMessageDialog(null, "Alumno no encontrado.");
 
                 }
@@ -334,57 +359,59 @@ modelo.setRowCount(0);
                 JOptionPane.showMessageDialog(null, "Alumno no ingresado");
                 return false;
             }
+        } catch (SQLIntegrityConstraintViolationException e) {
+            // Verificar si la excepción se debe a una violación de clave única
+            if (e.getMessage().contains("Duplicate entry")) {
+                // Mensaje personalizado para la violación de clave única
+                JOptionPane.showMessageDialog(null, "El alumno ya está registrado. Solo necesita ratificar.");
+            } else {
+                // Si no es una violación de clave única, muestra el mensaje de la excepción
+                e.printStackTrace();
+            }
+            return false;
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error en la BD.");
-            StringWriter sw = new StringWriter();
-            PrintWriter pw = new PrintWriter(sw);
-            e.printStackTrace(pw);
-            String stackTrace = sw.toString();
-
-            // Mostrar la traza de la pila en un cuadro de diálogo
-            JOptionPane.showMessageDialog(null, stackTrace, "Error", JOptionPane.ERROR_MESSAGE);
-
+            e.printStackTrace();
             return false;
         } finally {
             ConectaBD.cerrar();
         }
     }
 
-    public boolean ActualizarAlumno(String dniAlumno, String nombreAlumno, String apePaterno,
-            String apeMaterno, String fechNacimiento, String domicilio, String dniPadre, String dniMadre,
-            String dniApoderado, int telefono1, int telefono2, String email, String discapacidad,
-            String grupoSangui, String alergias, String nivel, String grado, String seccion, String codigoModular, String sexo) {
+    public boolean ActualizarAlumno(String dniAlumno,
+            String domicilio,
+            String dniApoderado,
+            int telefono1,
+            int telefono2,
+            String email,
+            String discapacidad,
+            String grupoSangui,
+            String alergias,
+            String nivel,
+            String grado,
+            String seccion) {
         try {
             Connection cn = ConectaBD.abrir();
             PreparedStatement ps = null;
 
             String query = "UPDATE alumno\n"
-                    + "SET nombreAlumno = ?, apePaterno = ?, apeMaterno = ?, fechNacimiento = ?, sexo = ?, domicilio = ?, \n"
-                    + "    dniPadre = ?, dniMadre = ?, dniApoderado = ?, telefono1 = ?, telefono2 = ?, email = ?, \n"
-                    + "    discapacidad = ?, grupoSangui = ?, alergias = ?, nivel = ?, grado = ?, seccion = ?, codigoModular = ?\n"
+                    + "SET domicilio = ?, dniApoderado = ?, telefono1 = ?, telefono2 = ?, email = ?, \n"
+                    + "    discapacidad = ?, grupoSangui = ?, alergias = ?, nivel = ?, grado = ?, seccion = ?\n"
                     + "WHERE dniAlumno = ?;";
             ps = cn.prepareStatement(query);
 
-            ps.setString(1, nombreAlumno);
-            ps.setString(2, apePaterno);
-            ps.setString(3, apeMaterno);
-            ps.setString(4, fechNacimiento); // Considera usar setDate si fechNacimiento es de tipo DATE
-            ps.setString(5, sexo);
-            ps.setString(6, domicilio);
-            ps.setString(7, dniPadre);
-            ps.setString(8, dniMadre);
-            ps.setString(9, dniApoderado);
-            ps.setInt(10, telefono1);
-            ps.setInt(11, telefono2);
-            ps.setString(12, email);
-            ps.setString(13, discapacidad);
-            ps.setString(14, grupoSangui);
-            ps.setString(15, alergias);
-            ps.setString(16, nivel);
-            ps.setString(17, grado);
-            ps.setString(18, seccion);
-            ps.setString(19, codigoModular);
-            ps.setString(20, dniAlumno); // El dniAlumno va al final para el WHERE
+            ps.setString(1, domicilio);
+            ps.setString(2, dniApoderado);
+            ps.setInt(3, telefono1);
+            ps.setInt(4, telefono2);
+            ps.setString(5, email);
+            ps.setString(6, discapacidad);
+            ps.setString(7, grupoSangui);
+            ps.setString(8, alergias);
+            ps.setString(9, nivel);
+            ps.setString(10, grado);
+            ps.setString(11, seccion);
+            ps.setString(12, dniAlumno);
 
             int resultUpdate = ps.executeUpdate();
 
@@ -400,69 +427,246 @@ modelo.setRowCount(0);
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error en la BD.");
             e.printStackTrace();
-
             return false;
         } finally {
             ConectaBD.cerrar();
         }
     }
 
-    public boolean BuscarAlumno(String dniAlumno, String nombreAlumno, String apePaterno, String apeMaterno,
-            String fechNacimiento, String domicilio, String dniPadre, String dniMadre, String dniApoderado, int telefono1,
-            int telefono2, String email, String discapacidad, String grupoSangui, String alergias, String nivel,
-            String grado, String seccion, String codigoModular, String sexo) {
+    public boolean BuscarAlumno(String codAlumno,
+            String dniAlumno,
+            String nombreAlumno,
+            String apePaterno,
+            String apeMaterno,
+            String fechNacimiento,
+            String domicilio,
+            String dniPadre,
+            String dniMadre,
+            String dniApoderado,
+            int telefono1,
+            int telefono2,
+            String email,
+            String discapacidad,
+            String grupoSangui,
+            String alergias,
+            String añoEduc,
+            String nivel,
+            String grado,
+            String seccion,
+            String codigoModular,
+            String sexo) {
         try {
             Connection cn = ConectaBD.abrir();
             PreparedStatement ps = null;
-            dniAlumno = alumno.txtBuscadorAlumno.getText();
-            String query = "SELECT * FROM alumno WHERE dniAlumno = ?";
-            ps = cn.prepareStatement(query);
 
-            ps.setString(1, dniAlumno);
+            if ("Por DNI".equals((String) rat.cbxCatBus.getSelectedItem())) {
+
+                dniAlumno = rat.txtBuscadorAlumno.getText();
+                String query = "SELECT * FROM alumno WHERE dniAlumno = ?";
+                ps = cn.prepareStatement(query);
+
+                ps.setString(1, dniAlumno);
+
+                try ( ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        // Recuperar datos de la consulta
+                        codAlumno = rs.getString("codAlumno");
+                        nombreAlumno = rs.getString("nombreAlumno");
+                        apePaterno = rs.getString("apePaterno");
+                        apeMaterno = rs.getString("apeMaterno");
+                        fechNacimiento = rs.getString("fechNacimiento");
+                        domicilio = rs.getString("domicilio");
+                        dniPadre = rs.getString("dniPadre");
+                        dniMadre = rs.getString("dniMadre");
+                        dniApoderado = rs.getString("dniApoderado");
+                        telefono1 = rs.getInt("telefono1");
+                        telefono2 = rs.getInt("telefono2");
+                        email = rs.getString("email");
+                        discapacidad = rs.getString("discapacidad");
+                        grupoSangui = rs.getString("grupoSangui");
+                        añoEduc = rs.getString("añoEduc");
+                        alergias = rs.getString("alergias");
+                        nivel = rs.getString("nivel");
+                        grado = rs.getString("grado");
+                        seccion = rs.getString("seccion");
+                        codigoModular = rs.getString("codigoModular");
+                        sexo = rs.getString("sexo");
+
+                        al.setDniAlumno(dniAlumno);
+                        al.setNombreAlumno(rs.getString("nombreAlumno"));
+                        al.setApePaterno(rs.getString("apePaterno"));
+                        al.setApeMaterno(rs.getString("apeMaterno"));
+                        al.setFechNacimiento(rs.getString("fechNacimiento"));
+                        al.setDomicilio(rs.getString("domicilio"));
+                        al.setDniPadre(rs.getString("dniPadre"));
+                        al.setDniMadre(rs.getString("dniMadre"));
+                        al.setDniAlumno(rs.getString("dniAlumno"));
+                        al.setDniApoderado(rs.getString("dniApoderado"));
+                        al.setTelefono1(rs.getInt("telefono1"));
+                        al.setTelefono2(rs.getInt("telefono2"));
+                        al.setEmail(rs.getString("email"));
+                        al.setDiscapacidad(rs.getString("discapacidad"));
+                        al.setGrupoSangui(rs.getString("grupoSangui"));
+                        al.setAlergias(rs.getString("alergias"));
+                        al.setAñoEduc(rs.getString("añoEduc"));
+                        al.setNivel(rs.getString("nivel"));
+                        al.setGrado(rs.getString("grado"));
+                        al.setSeccion(rs.getString("seccion"));
+                        al.setCodAlumno(rs.getString("codAlumno"));
+                        al.setCodigoModular(rs.getString("codigoModular"));
+                        al.setSexo(rs.getString("sexo"));
+
+                        // Verificar si el añoEduc es igual a "2024"
+                        if ("2024".equals(al.getAñoEduc())) {
+                            JOptionPane.showMessageDialog(null, "El alumno " + al.getDniAlumno()+ " ya está registrado para el próximo año.");
+                        }
+
+                        ConectaBD.cerrar();
+                        return true;
+                    } else {
+                        ConectaBD.cerrar();
+                        JOptionPane.showMessageDialog(null, "No se encontraron datos para el DNI proporcionado.");
+                        return false;
+                    }
+                }
+            } else if ("Por Código Estu".equals((String) rat.cbxCatBus.getSelectedItem())) {
+                codAlumno = rat.txtBuscadorAlumno.getText();
+                String query = "SELECT * FROM alumno WHERE codAlumno = ?";
+                ps = cn.prepareStatement(query);
+
+                ps.setString(1, codAlumno);
+
+                try ( ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        // Recuperar datos de la consulta
+                        dniAlumno = rs.getString("dniAlumno");
+                        nombreAlumno = rs.getString("nombreAlumno");
+                        apePaterno = rs.getString("apePaterno");
+                        apeMaterno = rs.getString("apeMaterno");
+                        fechNacimiento = rs.getString("fechNacimiento");
+                        domicilio = rs.getString("domicilio");
+                        dniPadre = rs.getString("dniPadre");
+                        dniMadre = rs.getString("dniMadre");
+                        dniApoderado = rs.getString("dniApoderado");
+                        telefono1 = rs.getInt("telefono1");
+                        telefono2 = rs.getInt("telefono2");
+                        email = rs.getString("email");
+                        discapacidad = rs.getString("discapacidad");
+                        grupoSangui = rs.getString("grupoSangui");
+                        añoEduc = rs.getString("añoEduc");
+                        alergias = rs.getString("alergias");
+                        nivel = rs.getString("nivel");
+                        grado = rs.getString("grado");
+                        seccion = rs.getString("seccion");
+                        codigoModular = rs.getString("codigoModular");
+                        sexo = rs.getString("sexo");
+
+                        al.setCodAlumno(codAlumno);
+                        al.setNombreAlumno(rs.getString("nombreAlumno"));
+                        al.setApePaterno(rs.getString("apePaterno"));
+                        al.setApeMaterno(rs.getString("apeMaterno"));
+                        al.setFechNacimiento(rs.getString("fechNacimiento"));
+                        al.setDomicilio(rs.getString("domicilio"));
+                        al.setDniPadre(rs.getString("dniPadre"));
+                        al.setDniMadre(rs.getString("dniMadre"));
+                        al.setDniAlumno(rs.getString("dniAlumno"));
+                        al.setDniApoderado(rs.getString("dniApoderado"));
+                        al.setTelefono1(rs.getInt("telefono1"));
+                        al.setTelefono2(rs.getInt("telefono2"));
+                        al.setEmail(rs.getString("email"));
+                        al.setDiscapacidad(rs.getString("discapacidad"));
+                        al.setGrupoSangui(rs.getString("grupoSangui"));
+                        al.setAlergias(rs.getString("alergias"));
+                        al.setAñoEduc(rs.getString("añoEduc"));
+                        al.setNivel(rs.getString("nivel"));
+                        al.setGrado(rs.getString("grado"));
+                        al.setSeccion(rs.getString("seccion"));
+                        al.setCodigoModular(rs.getString("codigoModular"));
+                        al.setSexo(rs.getString("sexo"));
+
+                        // Verificar si el añoEduc es igual a "2024"
+                        if ("2024".equals(al.getAñoEduc())) {
+                            JOptionPane.showMessageDialog(null, "El alumno " + al.getCodAlumno()+ " ya está registrado para el próximo año.");
+                        }
+
+                        ConectaBD.cerrar();
+                        return true;
+                    } else {
+                        ConectaBD.cerrar();
+                        JOptionPane.showMessageDialog(null, "No se encontraron datos para el DNI proporcionado.");
+                        return false;
+                    }
+                }
+            }
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error en la BD.");
+            e.printStackTrace();
+            return false;
+        } finally {
+            ConectaBD.cerrar();
+        }
+        return false;
+    }
+
+
+    public boolean BuscarJove(String dni, String nom, String apePa, String apeMa, String fechNac,
+            String sexo, String dniPadre, String dniMadre, String nivel, String grado, String codigoModular,
+            String añoEduc) {
+        try {
+            Connection cn = ConectaBD.abrir();
+            PreparedStatement ps = null;
+
+            dni = alumno.txtDNIBuscar.getText();
+
+            // Verificar si el DNI ya está registrado en la tabla de alumnos
+            String queryAlumno = "SELECT nombreAlumno FROM alumno WHERE dniAlumno = ?";
+            ps = cn.prepareStatement(queryAlumno);
+            ps.setString(1, dni);
+
+            try ( ResultSet rsAlumno = ps.executeQuery()) {
+                if (rsAlumno.next()) {
+                    // El DNI ya está registrado en la tabla de alumnos
+                    String nombreAlumno = rsAlumno.getString("nombreAlumno");
+                    JOptionPane.showMessageDialog(null, nombreAlumno + " ya es un alumno del colegio.");
+                    ConectaBD.cerrar();
+                    return false;
+                }
+            }
+
+            // El DNI no está registrado en la tabla de alumnos, realizar la consulta original
+            String queryNiños = "SELECT * FROM niños WHERE dni = ?";
+            ps = cn.prepareStatement(queryNiños);
+            ps.setString(1, dni);
 
             try ( ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     // Recuperar datos de la consulta
-                    nombreAlumno = rs.getString("nombreAlumno");
-                    apePaterno = rs.getString("apePaterno");
-                    apeMaterno = rs.getString("apeMaterno");
-                    fechNacimiento = rs.getString("fechNacimiento");
-                    domicilio = rs.getString("domicilio");
+                    dni = rs.getString("dni");
+                    nom = rs.getString("nom");
+                    apePa = rs.getString("apePa");
+                    apeMa = rs.getString("apeMa");
+                    fechNac = rs.getString("fechNac");
+                    sexo = rs.getString("sexo");
                     dniPadre = rs.getString("dniPadre");
                     dniMadre = rs.getString("dniMadre");
-                    dniApoderado = rs.getString("dniApoderado");
-                    telefono1 = rs.getInt("telefono1");
-                    telefono2 = rs.getInt("telefono2");
-                    email = rs.getString("email");
-                    discapacidad = rs.getString("discapacidad");
-                    grupoSangui = rs.getString("grupoSangui");
-                    alergias = rs.getString("alergias");
                     nivel = rs.getString("nivel");
                     grado = rs.getString("grado");
-                    seccion = rs.getString("seccion");
                     codigoModular = rs.getString("codigoModular");
-                    sexo = rs.getString("sexo");
 
-                    al.setNombreAlumno(rs.getString("nombreAlumno"));
-                    al.setApePaterno(rs.getString("apePaterno"));
-                    al.setApeMaterno(rs.getString("apeMaterno"));
-                    al.setFechNacimiento(rs.getString("fechNacimiento"));
-                    al.setDomicilio(rs.getString("domicilio"));
-                    al.setDniPadre(rs.getString("dniPadre"));
-                    al.setDniMadre(rs.getString("dniMadre"));
-                    al.setDniAlumno(dniAlumno);
-                    al.setDniApoderado(rs.getString("dniApoderado"));
-                    al.setTelefono1(rs.getInt("telefono1"));
-                    al.setTelefono2(rs.getInt("telefono2"));
-                    al.setEmail(rs.getString("email"));
-                    al.setDiscapacidad(rs.getString("discapacidad"));
-                    al.setGrupoSangui(rs.getString("grupoSangui"));
-                    al.setAlergias(rs.getString("alergias"));
-                    al.setNivel(rs.getString("nivel"));
-                    al.setGrado(rs.getString("grado"));
-                    al.setSeccion(rs.getString("seccion"));
-                    al.setCodigoModular(rs.getString("codigoModular"));
-                    al.setSexo(rs.getString("sexo"));
+                    nin.setDni(dni);
+                    nin.setNom(rs.getString("nom"));
+                    nin.setApePa(rs.getString("apePa"));
+                    nin.setApeMa(rs.getString("apeMa"));
+                    nin.setFechNac(rs.getString("fechNac"));
+                    nin.setSexo(rs.getString("sexo"));
+                    nin.setDniPadre(rs.getString("dniPadre"));
+                    nin.setDniMadre(rs.getString("dniMadre"));
+                    nin.setNivel(rs.getString("nivel"));
+                    nin.setGrado(rs.getString("grado"));
+                    nin.setCodigoModular(rs.getString("codigoModular"));
+                    nin.setAñoEduc(rs.getString("añoEduc"));
+
                     ConectaBD.cerrar();
                     return true;
                 } else {
@@ -585,4 +789,5 @@ modelo.setRowCount(0);
             ConectaBD.cerrar();
         }
     }
+
 }

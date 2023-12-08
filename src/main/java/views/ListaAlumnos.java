@@ -6,10 +6,11 @@ public class ListaAlumnos extends javax.swing.JFrame {
 
     private ComboBox controlador;
     private RegistroAlumno a;
+    private RatificarMatricula rat;
 
     public ListaAlumnos() {
         initComponents();
-        controlador = new ComboBox(a, this);
+        controlador = new ComboBox(a, this, rat);
         controlador.DatosComboBoxNivel(cbxNivel);
         controlador.DatosComboBoxSeccion(cbxNivel, cbxGrado, cbxSeccion);
 

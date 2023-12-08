@@ -12,9 +12,9 @@ public class RegistrarAlumno implements ActionListener {
     private GestorBD gestor;
     private RegistroAlumno alumno;
     private Alumno al;
-    private ValidarAlumno val;
+    private ValidarRegistro val;
 
-    public RegistrarAlumno(RegistroAlumno alumno, GestorBD gestor, Alumno al, ValidarAlumno val) {
+    public RegistrarAlumno(RegistroAlumno alumno, GestorBD gestor, Alumno al, ValidarRegistro val) {
         this.alumno = alumno;
         this.gestor = gestor;
         this.al = al;

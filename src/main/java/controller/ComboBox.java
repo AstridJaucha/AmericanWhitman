@@ -4,15 +4,18 @@ import javax.swing.JComboBox;
 import models.GestorBD;
 import views.RegistroAlumno;
 import views.ListaAlumnos;
+import views.RatificarMatricula;
 
 public class ComboBox {
 
-    private RegistroAlumno vista; // La ventana de la interfaz de usuario
+    private RegistroAlumno vista; 
     private ListaAlumnos lis;
+    private RatificarMatricula rat;
 
-    public ComboBox(RegistroAlumno vista, ListaAlumnos lis) {
+    public ComboBox(RegistroAlumno vista, ListaAlumnos lis, RatificarMatricula rat) {
         this.vista = vista;
         this.lis = lis;
+        this.rat=rat;
     }
 
     public void DatosComboBoxNivel(JComboBox<String> comboBoxNivel) {

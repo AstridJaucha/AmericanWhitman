@@ -4,25 +4,29 @@ import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
 import models.Alumno;
 import models.GestorBD;
-import views.RegistroAlumno;
+import views.RatificarMatricula;
+
 
 public class BuscarAlumno implements ActionListener {
 
     private GestorBD gestor;
-    private RegistroAlumno alumno;
-    private Alumno al;
 
-    public BuscarAlumno(RegistroAlumno alumno, GestorBD gestor, Alumno al) {
-        this.alumno = alumno;
+    private Alumno al;
+    private RatificarMatricula rat;
+
+    public BuscarAlumno(GestorBD gestor, Alumno al,RatificarMatricula rat) {
+        
         this.gestor = gestor;
         this.al = al;
-        this.alumno.btnBuscar.addActionListener(this);
+        this.rat=rat;
+        this.rat.btnBuscar.addActionListener(this);
 
     }
 
     public void buscar() {
         try {
             if (gestor.BuscarAlumno(
+                    al.getCodAlumno(),
                     al.getDniAlumno(),
                     al.getNombreAlumno(),
                     al.getApePaterno(),
@@ -38,6 +42,7 @@ public class BuscarAlumno implements ActionListener {
                     al.getDiscapacidad(),
                     al.getGrupoSangui(),
                     al.getAlergias(),
+                    al.getAñoEduc(),
                     al.getNivel(),
                     al.getGrado(),
                     al.getSeccion(),
@@ -45,28 +50,32 @@ public class BuscarAlumno implements ActionListener {
                     al.getSexo())) {
                 
                 // Actualizar los campos de los JTextField con los datos recuperados
-                alumno.txtAlergias.setText(al.getAlergias());
-                alumno.txtApeMaternoAlumno.setText(al.getApeMaterno());
-                alumno.txtApePaternoAlumno.setText(al.getApePaterno());
-                alumno.txtDNIalumno.setText(al.getDniAlumno());
-                alumno.txtCodigoModular.setText(al.getCodigoModular());
-                alumno.txtDNIPadre.setText(al.getDniPadre());
-                alumno.txtDNIapoderado.setText(al.getDniApoderado());
-                alumno.txtDNImadre.setText(al.getDniMadre());
-                alumno.txtDiscapacidad.setText(al.getDiscapacidad());
-                alumno.txtDomiciAlumno.setText(al.getDomicilio());
-                alumno.txtEmail.setText(al.getEmail());
-                alumno.txtFnacimienAlumno.setText(al.getFechNacimiento());
-                alumno.txtGrupoSangui.setText(al.getGrupoSangui());
-                alumno.txtNombreAlumno.setText(al.getNombreAlumno());
-                alumno.txtTelefono1.setText(String.valueOf(al.getTelefono1()));
-                alumno.txtTelefono2.setText(String.valueOf((char) al.getTelefono2()));
-                alumno.cbxNivel.setSelectedItem(al.getNivel());
-                alumno.cbxGradoEscolar.setSelectedItem(al.getGrado());
-                alumno.cbxSeccion.setSelectedItem(al.getSeccion());
-                alumno.cbxSexo.setSelectedItem(al.getSexo());
+                rat.txtCodigoEstu.setText(al.getCodAlumno());
+                rat.txtAlergias.setText(al.getAlergias());
+                rat.txtApeMaternoAlumno.setText(al.getApeMaterno());
+                rat.txtApePaternoAlumno.setText(al.getApePaterno());
+                rat.txtDNIalumno.setText(al.getDniAlumno());
+                rat.txtCodigoModular.setText(al.getCodigoModular());
+                rat.txtDNIPadre.setText(al.getDniPadre());
+                rat.txtDNIapoderado.setText(al.getDniApoderado());
+                rat.txtDNImadre.setText(al.getDniMadre());
+                rat.txtDiscapacidad.setText(al.getDiscapacidad());
+                rat.txtDomiciAlumno.setText(al.getDomicilio());
+                rat.txtEmail.setText(al.getEmail());
+                rat.txtFnacimienAlumno.setText(al.getFechNacimiento());
+                rat.txtGrupoSangui.setText(al.getGrupoSangui());
+                rat.txtNombreAlumno.setText(al.getNombreAlumno());
+                rat.txtA.setText(al.getAñoEduc());
+                rat.txtCodigoEstu.setText(al.getCodAlumno());
+                rat.txtTelefono1.setText(String.valueOf(al.getTelefono1()));
+                rat.txtTelefono2.setText(String.valueOf(al.getTelefono2()));
+                rat.cbxNivel.setSelectedItem(al.getNivel());
+                rat.cbxGradoEscolar.setSelectedItem(al.getGrado());
+                rat.cbxSeccion.setSelectedItem(al.getSeccion());
+                rat.cbxSexo.setSelectedItem(al.getSexo());
+                
             } else {
-                JOptionPane.showMessageDialog(null, "No se encontraron datos para el DNI proporcionado.");
+                JOptionPane.showMessageDialog(null, "No se encontraron datos para el código proporcionado.");
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
@@ -75,7 +84,7 @@ public class BuscarAlumno implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == alumno.btnBuscar) {
+        if (e.getSource() == rat.btnBuscar) {
             
             buscar();
         }

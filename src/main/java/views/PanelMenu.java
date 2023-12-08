@@ -37,6 +37,7 @@ public class PanelMenu extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         btnCerrar = new javax.swing.JButton();
+        btnRatificarAlumno = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -44,9 +45,19 @@ public class PanelMenu extends javax.swing.JFrame {
 
         btnListaAlumnos.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnListaAlumnos.setText("Lista de alumnos");
+        btnListaAlumnos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnListaAlumnosActionPerformed(evt);
+            }
+        });
 
         btnRegistrarAlumno.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        btnRegistrarAlumno.setText("Registrar alumno");
+        btnRegistrarAlumno.setText("Registrar alumno nuevo");
+        btnRegistrarAlumno.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegistrarAlumnoActionPerformed(evt);
+            }
+        });
 
         jLabel2.setFont(new java.awt.Font("Sitka Subheading", 1, 18)); // NOI18N
         jLabel2.setText("Sistema American Whitman");
@@ -58,6 +69,9 @@ public class PanelMenu extends javax.swing.JFrame {
         btnCerrar.setFont(new java.awt.Font("Segoe UI Black", 1, 16)); // NOI18N
         btnCerrar.setForeground(new java.awt.Color(255, 255, 255));
         btnCerrar.setText("Cerrar sistema");
+
+        btnRatificarAlumno.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        btnRatificarAlumno.setText("Ratificar matrícula");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -77,15 +91,12 @@ public class PanelMenu extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(153, 153, 153)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(btnListaAlumnos, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(btnRegistrarAlumno, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(141, 141, 141)
-                                .addComponent(btnCerrar, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(141, 141, 141)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(btnCerrar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnListaAlumnos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnRegistrarAlumno, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnRatificarAlumno, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -101,13 +112,15 @@ public class PanelMenu extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(19, 19, 19)
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(29, 29, 29)
+                .addGap(32, 32, 32)
                 .addComponent(btnRegistrarAlumno)
-                .addGap(52, 52, 52)
+                .addGap(18, 18, 18)
+                .addComponent(btnRatificarAlumno)
+                .addGap(18, 18, 18)
                 .addComponent(btnListaAlumnos)
-                .addGap(66, 66, 66)
+                .addGap(62, 62, 62)
                 .addComponent(btnCerrar)
-                .addContainerGap(99, Short.MAX_VALUE))
+                .addContainerGap(89, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -127,10 +140,19 @@ public class PanelMenu extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnRegistrarAlumnoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarAlumnoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnRegistrarAlumnoActionPerformed
+
+    private void btnListaAlumnosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListaAlumnosActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnListaAlumnosActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JButton btnCerrar;
     public javax.swing.JButton btnListaAlumnos;
+    public javax.swing.JButton btnRatificarAlumno;
     public javax.swing.JButton btnRegistrarAlumno;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
