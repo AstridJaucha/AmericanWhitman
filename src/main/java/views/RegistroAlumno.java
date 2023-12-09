@@ -4,6 +4,8 @@ import controller.ComboBox;
 import java.net.URL;
 import javax.swing.JOptionPane;
 
+
+
 public class RegistroAlumno extends javax.swing.JFrame {
 
     private ComboBox controlador;
@@ -852,7 +854,7 @@ public class RegistroAlumno extends javax.swing.JFrame {
     }//GEN-LAST:event_btnLimpiarActionPerformed
 
     private void btnDocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDocActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_btnDocActionPerformed
 
     private void btnMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMenuActionPerformed

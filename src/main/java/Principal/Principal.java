@@ -19,11 +19,12 @@ public class Principal {
         Jovenes nin = new Jovenes();
         ListaAlumnos lista = new ListaAlumnos();
         PanelMenu panel = new PanelMenu();
+        DatosExcel datex = new DatosExcel();
         RatificarMatricula rat = new RatificarMatricula();
-        GestorBD modelo = new GestorBD(sistema, al, lista, nin, rat);
+        GestorBD modelo = new GestorBD(sistema, al, lista, nin, rat, datex);
         BuscarDatos busca = new BuscarDatos(modelo, nin, sistema);
         ValidarRegistro val = new ValidarRegistro(sistema, al);
-        ValidarRatifica vlrat= new ValidarRatifica(rat, al);
+        ValidarRatifica vlrat = new ValidarRatifica(rat, al);
         Menu menu = new Menu(sistema, panel, lista, rat);
         ComboBox a = new ComboBox(sistema, lista, rat);
         ValidarLogin validar = new ValidarLogin(vista, sistema, modelo, x, panel);
@@ -31,8 +32,11 @@ public class Principal {
         BuscarAlumno buscar = new BuscarAlumno(modelo, al, rat);
 
         ListaControl bus = new ListaControl(lista, modelo, al);
-
+        
         Actualizar actualizar = new Actualizar(modelo, al, vlrat, rat);
+
+        ExcelReporte excelReporte = new ExcelReporte(sistema, datex, rat, modelo);
+
         vista.setVisible(true);
     }
 

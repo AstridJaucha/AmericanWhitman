@@ -40,7 +40,7 @@ public class BuscarDatos implements ActionListener {
                     nin.getGrado(),
                     nin.getCodigoModular(),
                     nin.getAñoEduc())) {
-                if ("2024".equals(nin.getAñoEduc())) {  // Corregido aquí
+                if ("2024".equals(nin.getAñoEduc())) {  
                     JOptionPane.showMessageDialog(null, nin.getNom() + " ya es un estudiante de nuestra institución", "Estudiante ya ingresado", 0);
                     sistema.txtAlerg.setText("");
                     sistema.txtApeMaterno.setText("");
@@ -81,9 +81,7 @@ public class BuscarDatos implements ActionListener {
                     sistema.cbxGrado.setSelectedItem(nin.getGrado());
                     sistema.cbxSexoN.setSelectedItem(nin.getSexo());
                 }
-            } else {
-                JOptionPane.showMessageDialog(null, "No se encontraron datos para el código proporcionado.");
-            }
+            } 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
         }

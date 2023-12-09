@@ -47,9 +47,9 @@ public class RegistrarAlumno implements ActionListener {
                     al.getSeccion(),
                     al.getCodigoModular(),
                     al.getSexo())) {
-                JOptionPane.showMessageDialog(null, "Registro exitoso");
+                System.out.println("Registro exitoso.");
             } else {
-                JOptionPane.showMessageDialog(null, "Registro fallido");
+                JOptionPane.showMessageDialog(null, "Registro fallido.");
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
