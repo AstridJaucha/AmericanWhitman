@@ -1,9 +1,24 @@
 package models;
 
+import jakarta.activation.DataHandler;
+import jakarta.activation.DataSource;
+import jakarta.activation.FileDataSource;
+import jakarta.mail.BodyPart;
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
+import jakarta.mail.Multipart;
+import jakarta.mail.Session;
+import jakarta.mail.Transport;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeBodyPart;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.internet.MimeMultipart;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -949,6 +964,83 @@ public class GestorBD {
 
                             JOptionPane.showMessageDialog(null, "Reporte generado con éxito.");
 
+                            
+                            Properties prop = new Properties();
+                            try ( InputStream input = new FileInputStream("src/main/resources/correo/config.properties")) {
+                                if (input == null) {
+                                    System.out.println("Error de acceso a config.properties");
+                                    return false;
+                                }
+                                prop.load(input);
+                            } catch (IOException ex) {
+                                ex.printStackTrace();
+                                return false;
+                            }
+
+                            final String username = prop.getProperty("email");
+                            final String password = prop.getProperty("password");
+
+                            Properties mailProperties = new Properties();
+                            mailProperties.put("mail.smtp.host", "smtp.gmail.com");
+                            mailProperties.put("mail.smtp.starttls.enable", "true");
+                            mailProperties.put("mail.smtp.port", "587"); // Puerto para TLS/STARTTLS
+                            mailProperties.put("mail.smtp.auth", "true");
+                            mailProperties.put("mail.smtp.ssl.protocols", "TLSv1.2");
+                            mailProperties.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+
+                            Session session = Session.getInstance(mailProperties, new jakarta.mail.Authenticator() {
+                                protected jakarta.mail.PasswordAuthentication getPasswordAuthentication() {
+                                    return new jakarta.mail.PasswordAuthentication(username, password);
+                                }
+                            });
+
+                            try {
+                                Message message = new MimeMessage(session);
+                                message.setFrom(new InternetAddress("elianajauchaauccatoma@gmail.com")); // el correo del remitente
+                                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email)); // el correo del destinatario
+                                message.setSubject("Reporte de datos ratificados - " +nombreAlumno+" "+apePaterno);
+                                
+
+                                BodyPart mensajeBodyPart = new MimeBodyPart();
+                                mensajeBodyPart.setText("""
+                                                        
+                                                        Tenga usted un buen d\u00eda. 
+                                                        
+                                                         Le saluda el Colegio American Whitman. 
+                                                        Se le hace el envio de un reporte como resumen de los datos actualizados en su ratificaci\u00f3n de matricula.
+                                                        
+                                                        
+                                                        ----------------------------------------------------------------------------------------------------------------------------------------
+                                                        
+                                                        
+                                                        Gracias por su preferencia.
+                                                        
+                                                        Atentamente. La Administraci\u00f3n.""");
+
+                                // Crear la parte del archivo adjunto
+                                BodyPart adjuntoBodyPart = new MimeBodyPart();
+                                DataSource source = new FileDataSource("P:\\Reporte_Ratificación_"+codAlumno+"_"+nombreAlumno+"_"+apePaterno+".xlsx");
+                                adjuntoBodyPart.setDataHandler(new DataHandler(source));
+                                adjuntoBodyPart.setFileName("Reporte_Ratificación_AW015_Martín_Sánchez.xlsx");
+
+                                // Crear el cuerpo del mensaje con las partes adjuntas
+                                Multipart multipart = new MimeMultipart();
+                                multipart.addBodyPart(mensajeBodyPart);
+                                multipart.addBodyPart(adjuntoBodyPart);
+
+                                // Establecer el contenido del mensaje
+                                message.setContent(multipart);
+
+                                Transport.send(message);
+                                System.out.println("Correo Enviado exitosamente");
+                                return true; // Retorna true solo si el correo se envió correctamente
+                            } catch (MessagingException e) {
+                                e.printStackTrace();
+                                return false; // Retorna false en caso de error al enviar el correo
+                            }
+
+                            
+                            
                         } else {
                             System.out.println("La hoja está vacía. No se puede obtener la fila 8.");
                         }
@@ -1240,8 +1332,81 @@ public class GestorBD {
                             try ( FileOutputStream fileOut = new FileOutputStream("P:/Reporte_Ratificación_" + codAlumno + "_" + nombreAlumno + "_" + apePaterno + ".xlsx")) {
                                 workbook.write(fileOut);
                             }
-
                             JOptionPane.showMessageDialog(null, "Reporte generado con éxito.");
+
+                            Properties prop = new Properties();
+                            try ( InputStream input = new FileInputStream("src/main/resources/correo/config.properties")) {
+                                if (input == null) {
+                                    System.out.println("Error de acceso a config.properties");
+                                    return false;
+                                }
+                                prop.load(input);
+                            } catch (IOException ex) {
+                                ex.printStackTrace();
+                                return false;
+                            }
+
+                            final String username = prop.getProperty("email");
+                            final String password = prop.getProperty("password");
+
+                            Properties mailProperties = new Properties();
+                            mailProperties.put("mail.smtp.host", "smtp.gmail.com");
+                            mailProperties.put("mail.smtp.starttls.enable", "true");
+                            mailProperties.put("mail.smtp.port", "587"); // Puerto para TLS/STARTTLS
+                            mailProperties.put("mail.smtp.auth", "true");
+                            mailProperties.put("mail.smtp.ssl.protocols", "TLSv1.2");
+                            mailProperties.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+
+                            Session session = Session.getInstance(mailProperties, new jakarta.mail.Authenticator() {
+                                protected jakarta.mail.PasswordAuthentication getPasswordAuthentication() {
+                                    return new jakarta.mail.PasswordAuthentication(username, password);
+                                }
+                            });
+
+                            try {
+                                Message message = new MimeMessage(session);
+                                message.setFrom(new InternetAddress("elianajauchaauccatoma@gmail.com")); // el correo del remitente
+                                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email)); // el correo del destinatario
+                                message.setSubject("Confirmación para registro - "+nombreAlumno+" " +apePaterno);
+                               
+
+                                BodyPart mensajeBodyPart = new MimeBodyPart();
+                                mensajeBodyPart.setText("""
+                                                        
+                                                        Tenga usted un buen d\u00eda. 
+                                                        
+                                                         Le saluda el Colegio American Whitman. 
+                                                        Se le hace el envio de un reporte como resumen de los datos ingresados al sistema como motivo de su matricula.
+                                                        
+                                                        
+                                                        ----------------------------------------------------------------------------------------------------------------------------------------
+                                                        
+                                                        
+                                                        Gracias por su preferencia.
+                                                        
+                                                        Atentamente. La Administraci\u00f3n.""");
+
+                                // Crear la parte del archivo adjunto
+                                BodyPart adjuntoBodyPart = new MimeBodyPart();
+                                DataSource source = new FileDataSource("P:\\Reporte_Ratificación_"+codAlumno+"_"+nombreAlumno+"_"+apePaterno+".xlsx");
+                                adjuntoBodyPart.setDataHandler(new DataHandler(source));
+                                adjuntoBodyPart.setFileName("Reporte_Ratificación_AW015_Martín_Sánchez.xlsx");
+
+                                // Crear el cuerpo del mensaje con las partes adjuntas
+                                Multipart multipart = new MimeMultipart();
+                                multipart.addBodyPart(mensajeBodyPart);
+                                multipart.addBodyPart(adjuntoBodyPart);
+
+                                // Establecer el contenido del mensaje
+                                message.setContent(multipart);
+
+                                Transport.send(message);
+                                System.out.println("Correo Enviado exitosamente");
+                                return true; // Retorna true solo si el correo se envió correctamente
+                            } catch (MessagingException e) {
+                                e.printStackTrace();
+                                return false; // Retorna false en caso de error al enviar el correo
+                            }
 
                         } else {
                             System.out.println("La hoja está vacía. No se puede obtener la fila 8.");
@@ -1265,4 +1430,5 @@ public class GestorBD {
         }
         return false;
     }
+
 }

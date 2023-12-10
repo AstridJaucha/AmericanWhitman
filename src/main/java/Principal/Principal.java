@@ -1,6 +1,5 @@
 package Principal;
 
-import javax.swing.JOptionPane;
 import controller.*;
 import models.*;
 import views.*;
@@ -9,8 +8,6 @@ import controller.BuscarAlumno;
 public class Principal {
 
     public static void main(String[] args) {
-
-//nuevas instancias de clase
         Login vista = new Login();
 
         RegistroAlumno sistema = new RegistroAlumno();
@@ -32,11 +29,10 @@ public class Principal {
         BuscarAlumno buscar = new BuscarAlumno(modelo, al, rat);
 
         ListaControl bus = new ListaControl(lista, modelo, al);
-        
+
         Actualizar actualizar = new Actualizar(modelo, al, vlrat, rat);
 
         ExcelReporte excelReporte = new ExcelReporte(sistema, datex, rat, modelo);
-
         vista.setVisible(true);
     }
 
